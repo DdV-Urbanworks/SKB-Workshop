@@ -95,7 +95,7 @@ gdf_sorted['poäng'] = (gdf_sorted['normalized'] * 100).round(0)
 
 
 #######################
-# Plots
+# Creating plots and charts
 
 # Heatmap
 #def make_heatmap(input_df, input_y, input_x, input_color, input_color_theme):
@@ -138,12 +138,15 @@ def make_map(gdf):
 
     return fig
 
+#########################
+# Plot content in Streamlit
+
 col = st.columns((4, 2), gap='medium')
 
 with col[0]:
-    st.markdown('#### Var ska vi investera?')
+    st.markdown('# Var ska vi investera?')
     
-    Map = make_map(gdf)
+    Map = make_map(gdf_sorted)
     st.plotly_chart(Map, use_container_width=True)
     
 
@@ -175,10 +178,19 @@ with col[1]:
                      )}
                  )
     
+
+
+
+
+    
 with st.expander('Beskrivning', expanded=True):
         st.write('''
             Detta verktyg är utvecklat av Urbanworks i syfte att inspirera SKB till ett evidenbaserat beslutsfattande. Datan är hämtad från ...''')
-        
+
+
+
+
+
 # Setup logo
 image = Image.open('Urban Works_logga_vit.png')
 st.image(image, width=200)
