@@ -66,9 +66,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Setup logo
-image = Image.open('Urban Works_logga_vit.png')
-st.image(image, width=200)
 
 
 #######################
@@ -132,12 +129,12 @@ def make_map(gdf):
         hover_name='Kommun',
         color_continuous_scale=color_scale, 
         map_style="light",
-        zoom=8, 
+        zoom=7, 
         center={"lat": 59.33, "lon": 18.07}
     )
     return fig
 
-col = st.columns((3, 2), gap='large')
+col = st.columns((2, 2), gap='medium')
 
 with col[0]:
     st.markdown('#### Var ska vi investera?')
@@ -166,7 +163,7 @@ with col[1]:
                     "Kommun": st.column_config.TextColumn(
                         "Kommun",
                     ),
-                    "Betyg": st.column_config.ProgressColumn(
+                    "poäng": st.column_config.ProgressColumn(
                         "poäng",
                         min_value=0,
                         max_value=max(gdf.poäng),
@@ -176,3 +173,7 @@ with col[1]:
 with st.expander('Beskrivning', expanded=True):
         st.write('''
             Detta verktyg är utvecklat av Urbanworks i syfte att inspirera SKB till ett evidenbaserat beslutsfattande. Datan är hämtad från ...''')
+        
+# Setup logo
+image = Image.open('Urban Works_logga_vit.png')
+st.image(image, width=200)
