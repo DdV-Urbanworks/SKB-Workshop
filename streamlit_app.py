@@ -88,8 +88,8 @@ with st.sidebar:
 
 gdf['poäng']=gdf['Betyg - Politik']*Fpolitik + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt
 gdf_sorted = gdf.sort_values(by='poäng', ascending=False)
-gdf_sorted['normalized'] = gdf_sorted['total'] / gdf_sorted['total'].max()
-gdf_sorted['poäng'] = (gdf_sorted['normalized'] * 100).round(1)
+gdf_sorted['normalized'] = gdf_sorted['poäng'] / gdf_sorted['poäng'].max()
+gdf_sorted['poäng'] = (gdf_sorted['normalized'] * 100).round(0)
 
 
 
