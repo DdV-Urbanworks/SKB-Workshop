@@ -133,6 +133,9 @@ def make_map(gdf):
         zoom=7, 
         center={"lat": 59.33, "lon": 18.07}
     )
+    
+    fig.update_layout(height=800)  # <-- Adjust height here
+
     return fig
 
 col = st.columns((4, 2), gap='medium')
