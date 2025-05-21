@@ -86,6 +86,7 @@ with st.sidebar:
     
 
 gdf['poäng']=gdf['Betyg - Politik']*Fpolitik + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt
+gdf['poäng'] = gdf['poäng']/gdf['poäng'].max()
 gdf_sorted = gdf.sort_values(by='poäng', ascending=False)
 #gdf_sorted['normalized'] = gdf_sorted['total'] / gdf_sorted['total'].max()
 #gdf_sorted['poäng'] = (gdf_sorted['normalized'] * 100).round(1)
@@ -167,6 +168,7 @@ with col[1]:
                         "poäng",
                         min_value=0,
                         max_value=max(gdf.poäng),
+                        color="#CD0535"
                      )}
                  )
     
