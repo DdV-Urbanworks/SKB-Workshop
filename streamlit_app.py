@@ -168,7 +168,7 @@ with col[1]:
                         "poäng",
                         min_value=0,
                         max_value=max(gdf.poäng),
-                        color="#CD0535"
+                        color="#gray"
                      )}
                  )
     
