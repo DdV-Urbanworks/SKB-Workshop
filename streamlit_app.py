@@ -135,7 +135,7 @@ def make_map(gdf):
     )
     return fig
 
-col = st.columns((2, 2), gap='medium')
+col = st.columns((4, 2), gap='medium')
 
 with col[0]:
     st.markdown('#### Var ska vi investera?')
@@ -168,7 +168,7 @@ with col[1]:
                         "poäng",
                         min_value=0,
                         max_value=max(gdf.poäng),
-                        color="gray"
+                        format=None,
                      )}
                  )
     
