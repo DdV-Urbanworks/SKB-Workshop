@@ -5,6 +5,7 @@ import pandas as pd
 import altair as alt
 import plotly.express as px
 import geopandas as gpd
+from PIL import Image
 
 #######################
 # Page configuration
@@ -15,6 +16,59 @@ st.set_page_config(
     initial_sidebar_state="expanded")
 
 alt.theme.enable("default")
+
+
+# CSS styling
+st.markdown("""
+<style>
+
+[data-testid="block-container"] {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 0rem;
+    margin-bottom: -7rem;
+}
+
+[data-testid="stVerticalBlock"] {
+    padding-left: 0rem;
+    padding-right: 0rem;
+}
+
+[data-testid="stMetric"] {
+    background-color: #ffffff;
+    text-align: center;
+    padding: 15px 0;
+}
+
+[data-testid="stMetricLabel"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+[data-testid="stMetricDeltaIcon-Up"] {
+    position: relative;
+    left: 38%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+[data-testid="stMetricDeltaIcon-Down"] {
+    position: relative;
+    left: 38%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# Setup logo
+image = Image.open('Urban Works_logga_vit.png')
+st.image(image, width=200)
 
 
 #######################
@@ -83,10 +137,6 @@ def make_map(gdf):
     )
     return fig
 
-FIG = make_map(gdf_sorted)
-FIG.show()
-
-
 col = st.columns((3, 2), gap='large')
 
 with col[0]:
@@ -102,13 +152,13 @@ with col[0]:
 with col[1]:
     st.markdown('#### Kommuner med högst poäng')
 
-st.dataframe(gdf.drop(columns='geometry'))
 
-cols = ['geometry', 'Betyg - Politik', 'Betyg - Direktanvisningar', 'Betyg - tomträtt',
+
+    cols = ['geometry', 'Betyg - Politik', 'Betyg - Direktanvisningar', 'Betyg - tomträtt',
         'Styre-2014', 'Styre-2018', 'Styre-2022', 'färgkod', 'kom_name', 'Direktanvisar',
         'Tomträtt_y', '2023', '2024', 'Befolkningsutveckling']
 
-st.dataframe(gdf_sorted.drop(columns=cols),
+    st.dataframe(gdf_sorted.drop(columns=cols),
                  column_order=("Kommun", "poäng"),
                  hide_index=True,
                  width=None,
