@@ -68,6 +68,7 @@ st.markdown("""
 
 
 
+
 #######################
 # Load data
 gdf = gpd.read_file('250521_prepared-data.gpkg')
@@ -86,11 +87,9 @@ with st.sidebar:
     
 
 gdf['poäng']=gdf['Betyg - Politik']*Fpolitik + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt
-gdf['poäng'] = gdf['poäng']/gdf['poäng'].max()
 gdf_sorted = gdf.sort_values(by='poäng', ascending=False)
-gdf_sorted['poäng'] = gdf_sorted['poäng'].astype(float)
-#gdf_sorted['normalized'] = gdf_sorted['total'] / gdf_sorted['total'].max()
-#gdf_sorted['poäng'] = (gdf_sorted['normalized'] * 100).round(1)
+gdf_sorted['normalized'] = gdf_sorted['total'] / gdf_sorted['total'].max()
+gdf_sorted['poäng'] = (gdf_sorted['normalized'] * 100).round(1)
 
 
 
@@ -155,7 +154,7 @@ with col[1]:
 
     cols = ['geometry', 'Betyg - Politik', 'Betyg - Direktanvisningar', 'Betyg - tomträtt',
         'Styre-2014', 'Styre-2018', 'Styre-2022', 'färgkod', 'kom_name', 'Direktanvisar',
-        'Tomträtt_y', '2023', '2024', 'Befolkningsutveckling']
+        'Tomträtt_y', '2023', '2024', 'Befolkningsutveckling','normalized']
 
     st.dataframe(gdf_sorted.drop(columns=cols),
                  column_order=("Kommun", "poäng"),
@@ -168,11 +167,9 @@ with col[1]:
                     "poäng": st.column_config.ProgressColumn(
                         "poäng",
                         min_value=0,
-                        max_value=float(gdf['poäng'].max()),
-                        color="gray"
+                        max_value=max(gdf.poäng),
                      )}
                  )
-    
     
 with st.expander('Beskrivning', expanded=True):
         st.write('''
