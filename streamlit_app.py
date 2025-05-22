@@ -32,6 +32,10 @@ with st.sidebar:
     st.write("")  
     st.write("") 
     st.write("")
+    st.write("")  
+    st.write("")  
+    st.write("") 
+    st.write("")
     st.title('Vikta din karta')
     
     Fpolitik = st.selectbox('Politisk riktning', pd.Series(range(11)))
@@ -163,9 +167,7 @@ with col[1]:
 
     st.write("")  
     st.write("")  
-    st.write("")  
-    st.write("") 
-    st.write("") 
+
 
     # Setup logo
     image = Image.open('Urban Works_logga_svart_300 dpi.png')
