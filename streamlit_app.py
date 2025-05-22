@@ -84,6 +84,8 @@ with st.sidebar:
     Fpolitik = st.selectbox('Politisk riktning', pd.Series(range(11)))
     FTomträtt = st.selectbox('Tomträtt', pd.Series(range(11)))
     FDirektanvisar = st.selectbox('Direktanvisar', pd.Series(range(11)))
+    Fbefolkning = st.selectbox('Befolkningsutveckling', pd.Series(range(11)))
+    button = st.button('Uppdatera karta')
     
 
 gdf['poäng']=gdf['Betyg - Politik']*Fpolitik + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt
@@ -145,15 +147,20 @@ col = st.columns((4, 2), gap='medium')
 
 with col[0]:
     st.markdown('# Var ska vi investera?')
-    
-    Map = make_map(gdf_sorted)
-    st.plotly_chart(Map, use_container_width=True)
+    if button:
+        
+        Map = make_map(gdf_sorted)
+        st.plotly_chart(Map, use_container_width=True)
     
 
 
 
 
 with col[1]:
+    st.write("")  
+    st.write("")  
+    st.write("") 
+    st.write("")  
     st.markdown('#### Kommuner med högst poäng')
 
 
@@ -162,28 +169,33 @@ with col[1]:
         'Styre-2014', 'Styre-2018', 'Styre-2022', 'färgkod', 'kom_name', 'Direktanvisar',
         'Tomträtt_y', '2023', '2024', 'Befolkningsutveckling','normalized']
 
-    st.dataframe(gdf_sorted.drop(columns=cols),
-                 column_order=("Kommun", "poäng"),
-                 hide_index=True,
-                 width=None,
-                 column_config={
-                    "Kommun": st.column_config.TextColumn(
-                        "Kommun",
-                    ),
-                    "poäng": st.column_config.ProgressColumn(
-                        "poäng",
-                        min_value=0,
-                        max_value=max(gdf.poäng),
-                        format=None,
-                     )}
-                 )
+    df_to_display = gdf_sorted.drop(columns=cols)
+
+    if button:
+        st.dataframe(
+            df_to_display,
+            column_order=("Kommun", "poäng"),
+            hide_index=True,
+            width=None,
+            column_config={
+                "Kommun": st.column_config.TextColumn(
+                    "Kommun",
+                ),
+                "poäng": st.column_config.ProgressColumn(
+                    "poäng",
+                    min_value=0,
+                    max_value=max(gdf.poäng),
+                    format=None,
+                )
+            }
+        )
     
 
 
 
 
-    
-with st.expander('Beskrivning', expanded=True):
+
+    with st.expander('Beskrivning', expanded=True):
         st.write('''
             Detta verktyg är utvecklat av Urbanworks i syfte att inspirera SKB till ett evidenbaserat beslutsfattande. Datan är hämtad från ...''')
 
