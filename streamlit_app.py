@@ -204,5 +204,5 @@ with col[1]:
 
 
 # Setup logo
-image = Image.open('Urban Works_logga_vit.png')
+image = Image.open('Urban Works_logga_svart_300 dpi.png')
 st.image(image, width=200)
