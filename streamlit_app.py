@@ -10,7 +10,7 @@ from PIL import Image
 #######################
 # Page configuration
 st.set_page_config(
-    page_title="Var ska vi investera?",
+    page_title="Var?",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded")
@@ -28,32 +28,23 @@ gdf = gpd.read_file('Data.gpkg')
 #######################
 # Sidebar - Hämta input
 with st.sidebar:
-    st.write("")  
-    st.write("")  
-    st.write("") 
-    st.write("")
-    st.write("")  
-    st.write("")  
-    st.write("") 
-    st.write("")
-    st.title('Vikta din karta')
+
+    st.title('Hur viktiga är dessa frågor för SKBs nya markstrategi?')
     
-    Fpolitik = st.selectbox('Politisk riktning', pd.Series(range(11)))
-    FTomträtt = st.selectbox('Tomträtt', pd.Series(range(11)))
-    FDirektanvisar = st.selectbox('Direktanvisar', pd.Series(range(11)))
-    Fbefolkning = st.selectbox('Befolkningsutveckling', pd.Series(range(11)))
-    Favstånd = st.selectbox('Avstånd till Stockholm C', pd.Series(range(11)))
-    
+    Fnärhet = st.slider('Hur stor andel av kommun ligger inom 1 timme från Stockholm eller Uppsala?', 0, 10, 5)
+    FTomträtt = st.slider('Tillämpar kommunen tomträtt?', 0, 10, 5)
+    FDirektanvisar = st.slider('Direktanvisar kommunen mark?', 0, 10, 5)
+    Fbefolkning = st.slider('Hur är befolkningsutvecklingen i kommunen?', 0, 10, 5)
+    Fmarkvärde = st.slider('Vad är snittpriset per kvadratmeter på marken?', 0, 10, 5)
+    Fgrön = st.slider('Hur stor är krontäckningen i kommunen', 0, 10, 5)
+    Fbestånd = st.slider('Har SKB ett stort bestånd i kommunen?', 0, 10, 5)
     
 ########################
-# Beräkna ppoäng baserat på input
+# Beräkna poäng baserat på input
 
-gdf['poäng']=gdf['Betyg - Politik']*Fpolitik + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt+gdf['Avstånd till Stockholm C']*Favstånd + gdf['Befolkingsutveckling - betyg']*Fbefolkning
+gdf['poäng']=gdf['närhet']*Fnärhet + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt+gdf['markvärde']*Fmarkvärde + gdf['Befolkingsutveckling - betyg']*Fbefolkning+ gdf['Bestånd']*Fbestånd + gdf['krontäckning']*Fgrön
 maxpoäng = 500
-gdf_sorted = gdf.sort_values(by='poäng', ascending=False)
-gdf_sorted['normalized'] = gdf_sorted['poäng'] / maxpoäng
-gdf_sorted['poäng'] = (gdf_sorted['normalized'] * 100).round(0)
-
+gdf = gdf.sort_values(by='poäng', ascending=False)
 
 ########################
 # Definiera funktioner för att skapa grafik
@@ -70,6 +61,7 @@ def make_map(gdf):
         locations=gdf.index,
         color='poäng',
         hover_name='Kommun',
+        hover_data={},
         color_continuous_scale=color_scale, 
         map_style="light",
         zoom=7, 
@@ -80,28 +72,7 @@ def make_map(gdf):
 
     return fig
 
-def make_scorecard(Fpolitik, FTomträtt, FDirektanvisar, Fbefolkning):
-    
-    
-    Y = [Fpolitik, FTomträtt, FDirektanvisar, Fbefolkning, Favstånd]
-    X = ['Politisk riktning', 'Tomträtt', 'Direktanvisar', 'Befolkningsutveckling', 'Avstånd till Stockholm C']
 
-    # Create DataFrame from X and Y
-    source = pd.DataFrame({
-        'kategori': X,
-        'viktning': Y
-    })
-
-    # Bar chart
-    bar_chart = alt.Chart(source).mark_bar(color='#004D73').encode(
-        x=alt.X('viktning:Q', title='Viktning', scale=alt.Scale(domain=[0, 10])),
-        y=alt.Y('kategori:O', title='Kategori'),
-        tooltip=['kategori:O', 'viktning:Q']
-    ).properties(
-        width=300,
-        height=200
-    )
-    return bar_chart
 
 #########################
 # Plotta in content in Streamlit
@@ -109,14 +80,12 @@ def make_scorecard(Fpolitik, FTomträtt, FDirektanvisar, Fbefolkning):
 col = st.columns((4, 2), gap='medium')
 
 with col[0]:
-    st.markdown('# Var ska vi investera?')
+    st.markdown('# Övning 2: VAR')
             
-    Map = make_map(gdf_sorted)
+    Map = make_map(gdf)
     st.plotly_chart(Map, use_container_width=True)
 
-    st.markdown('#### Min viktning')
-    barchart = make_scorecard(Fpolitik, FTomträtt, FDirektanvisar, Fbefolkning)
-    st.altair_chart(barchart, use_container_width=True)
+    
     
 
 with col[1]:
@@ -134,9 +103,7 @@ with col[1]:
 
     
     ### Create DF with top kommuner
-    cols = ['geometry', 'Betyg - Politik', 'Betyg - Direktanvisningar', 'Betyg - tomträtt','normalized']
-
-    df_to_display = gdf_sorted.drop(columns=cols)
+    df_to_display = gdf[['Kommun', 'poäng']]
 
     
     st.dataframe(
@@ -150,9 +117,10 @@ with col[1]:
                 ),
                 "poäng": st.column_config.ProgressColumn(
                     "poäng",
+                    help=None,
                     min_value=0,
                     max_value=max(gdf.poäng),
-                    format=None,
+                    format=" "
                 )
             }
         )
@@ -161,9 +129,11 @@ with col[1]:
     
 
     # Beskrivning
-    with st.expander('Beskrivning', expanded=True):
+    with st.expander('Beskrivning', expanded=False):
         st.write('''
-            Detta verktyg är utvecklat av Urbanworks i syfte att inspirera SKB till ett evidenbaserat beslutsfattande. Datan är hämtad från ...''')
+            Detta verktyg är utvecklat av Urbanworks i syfte att understödja SKBs styrelse till ett evidenbaserat förhållningssätt i framtagandet av en ny markstrategi. Datan som ligger till grund för kartan du ser är hämtad från
+                 Traveltime, kommunernas markpolicys, SCB, Svensk Mäklarstatistik, Boverket och SKB. Vi på Urbanworks har utifrån detta dataunderlag poängsatt kommunerna i varje kategori. Verktyget kan användas för att visa hur olika 
+                 prioriteringar kan leda till att olika kommuner blir attraktiva för SKB att investera i.''')
 
     st.write("")  
     st.write("")  

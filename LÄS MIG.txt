@@ -1,0 +1,1 @@
+För att köra programmet måste  alla filer laddas upp i en GIThub repository och länkas in i Streamlits webtjänst.
