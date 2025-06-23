@@ -97,7 +97,7 @@ with col[1]:
     st.write("")  
     st.write("") 
     st.write("")  
-    st.markdown('#### Kommuner med högst poäng')
+    st.markdown('#### Kommuner med högst potential:')
 
 
 
