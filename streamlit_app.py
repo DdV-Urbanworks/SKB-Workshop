@@ -35,16 +35,16 @@ with st.sidebar:
     FTomträtt = st.slider('Tillämpar kommunen tomträtt?', 0, 10, 5)
     FDirektanvisar = st.slider('Direktanvisar kommunen mark?', 0, 10, 5)
     Fbefolkning = st.slider('Hur är befolkningsutvecklingen i kommunen?', 0, 10, 5)
-    Fmarkvärde = st.slider('Vad är snittpriset per kvadratmeter på marken?', 0, 10, 5)
-    Fgrön = st.slider('Hur stor är krontäckningen i kommunen', 0, 10, 5)
+    Fmarkvärde = st.slider('Vad är snittpriset per kvadratmeter mark?', 0, 10, 5)
+    Fgrön = st.slider('Hur stor är krontäckningen i urbana områden i kommunen?', 0, 10, 5)
     Fbestånd = st.slider('Har SKB ett stort bestånd i kommunen?', 0, 10, 5)
     
 ########################
 # Beräkna poäng baserat på input
 
-gdf['poäng']=gdf['närhet']*Fnärhet + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt+gdf['markvärde']*Fmarkvärde + gdf['Befolkingsutveckling - betyg']*Fbefolkning+ gdf['Bestånd']*Fbestånd + gdf['krontäckning']*Fgrön
+gdf['potential']=gdf['närhet']*Fnärhet + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt+gdf['markvärde']*Fmarkvärde + gdf['Befolkingsutveckling - betyg']*Fbefolkning+ gdf['Bestånd']*Fbestånd + gdf['krontäckning']*Fgrön
 maxpoäng = 500
-gdf = gdf.sort_values(by='poäng', ascending=False)
+gdf = gdf.sort_values(by='potential', ascending=False)
 
 ########################
 # Definiera funktioner för att skapa grafik
@@ -59,7 +59,7 @@ def make_map(gdf):
         gdf,
         geojson=gdf.__geo_interface__,
         locations=gdf.index,
-        color='poäng',
+        color='potential',
         hover_name='Kommun',
         hover_data={},
         color_continuous_scale=color_scale, 
@@ -69,6 +69,7 @@ def make_map(gdf):
     )
     
     fig.update_layout(height=800)  # <-- Adjust height here
+    fig.update_coloraxes(showscale=False)
 
     return fig
 
@@ -103,23 +104,23 @@ with col[1]:
 
     
     ### Create DF with top kommuner
-    df_to_display = gdf[['Kommun', 'poäng']]
+    df_to_display = gdf[['Kommun', 'potential']]
 
     
     st.dataframe(
             df_to_display,
-            column_order=("Kommun", "poäng"),
+            column_order=("Kommun", "potential"),
             hide_index=True,
             width=None,
             column_config={
                 "Kommun": st.column_config.TextColumn(
                     "Kommun",
                 ),
-                "poäng": st.column_config.ProgressColumn(
-                    "poäng",
+                "potential": st.column_config.ProgressColumn(
+                    "potential",
                     help=None,
                     min_value=0,
-                    max_value=max(gdf.poäng),
+                    max_value=max(gdf.potential),
                     format=" "
                 )
             }
