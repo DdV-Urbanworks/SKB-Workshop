@@ -5,8 +5,6 @@ import pandas as pd
 import plotly.express as px
 import geopandas as gpd
 from PIL import Image
-import datetime
-import io
 
 #######################
 # Page configuration
@@ -56,7 +54,7 @@ gdf = gdf.sort_values(by='potential', ascending=False)
 def make_map(gdf):
     color_scale = ["#ffffff", "#004d73"]  # white → blue
 
-    fig = px.choropleth(
+    fig = px.choropleth_mapbox(
         gdf,
         geojson=gdf.__geo_interface__,
         locations=gdf.index,
@@ -64,14 +62,20 @@ def make_map(gdf):
         hover_name='Kommun',
         hover_data={},
         color_continuous_scale=color_scale,
-        projection="mercator"
+        mapbox_style="carto-positron",   # background
+        zoom=7,                          # adjust to your region
+        center={"lat": 59.457969, "lon": 18.339531},  # roughly center of Sweden 59.457969, 18.339531
+        opacity=0.7,
     )
 
-    fig.update_geos(fitbounds="locations", visible=False)
-    fig.update_layout(height=800, margin={"r":0,"t":0,"l":0,"b":0})
-    fig.update_coloraxes(showscale=False)
+    fig.update_layout(
+        height=800,
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+        coloraxis_showscale=False
+    )
 
     return fig
+
 
 
 #########################
