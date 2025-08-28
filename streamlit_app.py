@@ -110,7 +110,7 @@ with col[1]:
             df_to_display,
             column_order=("Kommun", "potential"),
             hide_index=True,
-            width=None,
+            # width=None,
             column_config={
                 "Kommun": st.column_config.TextColumn(
                     "Kommun",
