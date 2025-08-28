@@ -2,10 +2,11 @@
 # Import libraries
 import streamlit as st
 import pandas as pd
-import altair as alt
 import plotly.express as px
 import geopandas as gpd
 from PIL import Image
+import datetime
+import io
 
 #######################
 # Page configuration
@@ -15,7 +16,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded")
 
-alt.theme.enable("default")
 
 
 #######################
@@ -31,48 +31,47 @@ with st.sidebar:
 
     st.title('Hur viktiga är dessa frågor för SKBs nya markstrategi?')
     
-    Fnärhet = st.slider('Hur stor andel av kommun ligger inom 1 timme från Stockholm eller Uppsala?', 0, 10, 5)
+    Fnärhet = st.slider('Hur stor andel av kommunen ligger inom 1 timme från Stockholm eller Uppsala?', 0, 10, 5)
     FTomträtt = st.slider('Tillämpar kommunen tomträtt?', 0, 10, 5)
     FDirektanvisar = st.slider('Direktanvisar kommunen mark?', 0, 10, 5)
     Fbefolkning = st.slider('Hur är befolkningsutvecklingen i kommunen?', 0, 10, 5)
     Fmarkvärde = st.slider('Vad är snittpriset per kvadratmeter mark?', 0, 10, 5)
     Fgrön = st.slider('Hur stor är krontäckningen i urbana områden i kommunen?', 0, 10, 5)
     Fbestånd = st.slider('Har SKB ett stort bestånd i kommunen?', 0, 10, 5)
+    Fmedlemstäthet = st.slider('Hur många SKB-medlemmar bor i kommunen?', 0, 10, 5)
     
+
+
+
 ########################
 # Beräkna poäng baserat på input
 
-gdf['potential']=gdf['närhet']*Fnärhet + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt+gdf['markvärde']*Fmarkvärde + gdf['Befolkingsutveckling - betyg']*Fbefolkning+ gdf['Bestånd']*Fbestånd + gdf['krontäckning']*Fgrön
-maxpoäng = 500
+gdf['potential']=gdf['närhet']*Fnärhet + gdf['Betyg - Direktanvisningar']*FDirektanvisar + gdf['Betyg - tomträtt']*FTomträtt+gdf['markvärde']*Fmarkvärde + gdf['Befolkingsutveckling - betyg']*Fbefolkning+ gdf['Bestånd']*Fbestånd + gdf['krontäckning']*Fgrön + gdf['antal per invånare']*Fmedlemstäthet#
+maxpoäng = 600
 gdf = gdf.sort_values(by='potential', ascending=False)
 
 ########################
 # Definiera funktioner för att skapa grafik
 
 def make_map(gdf):
-    color_scale = [
-        (0, "rgba(255, 255, 255, 0.8)"),   
-        (1, "rgba(0, 77, 115, 0.8)")     
-    ]
+    color_scale = ["#ffffff", "#004d73"]  # white → blue
 
-    fig = px.choropleth_map(
+    fig = px.choropleth(
         gdf,
         geojson=gdf.__geo_interface__,
         locations=gdf.index,
         color='potential',
         hover_name='Kommun',
         hover_data={},
-        color_continuous_scale=color_scale, 
-        map_style="light",
-        zoom=7, 
-        center={"lat": 59.33, "lon": 18.07}
+        color_continuous_scale=color_scale,
+        projection="mercator"
     )
-    
-    fig.update_layout(height=800)  # <-- Adjust height here
+
+    fig.update_geos(fitbounds="locations", visible=False)
+    fig.update_layout(height=800, margin={"r":0,"t":0,"l":0,"b":0})
     fig.update_coloraxes(showscale=False)
 
     return fig
-
 
 
 #########################
@@ -81,7 +80,7 @@ def make_map(gdf):
 col = st.columns((4, 2), gap='medium')
 
 with col[0]:
-    st.markdown('# Övning 2: VAR')
+    st.markdown('# VAR?')
             
     Map = make_map(gdf)
     st.plotly_chart(Map, use_container_width=True)
@@ -146,6 +145,3 @@ with col[1]:
 
     image1 = Image.open('SKB - logga.png')
     st.image(image1, width=200)
-
-
-
