@@ -29,14 +29,14 @@ with st.sidebar:
 
     st.title('Hur viktiga är dessa frågor för SKBs nya markstrategi?')
     
-    Fnärhet = st.slider('Hur stor andel av kommunen ligger inom 1 timme från Stockholm', 0, 10, 5)
-    FTomträtt = st.slider('Tillämpar kommunen tomträtt?', 0, 10, 5)
-    FDirektanvisar = st.slider('Direktanvisar kommunen mark?', 0, 10, 5)
-    Fbefolkning = st.slider('Hur är befolkningsutvecklingen i kommunen?', 0, 10, 5)
-    Fmarkvärde = st.slider('Vad är snittpriset per kvadratmeter mark?', 0, 10, 5)
-    Fgrön = st.slider('Hur stor är krontäckningen i urbana områden i kommunen?', 0, 10, 5)
-    Fbestånd = st.slider('Har SKB ett stort bestånd i kommunen?', 0, 10, 5)
-    Fmedlemstäthet = st.slider('Hur många SKB-medlemmar bor i kommunen?', 0, 10, 5)
+    Fnärhet = st.slider('Hur stor andel av kommunen ligger inom 1 timme från Stockholm', 0, 10, 0)
+    FTomträtt = st.slider('Tillämpar kommunen tomträtt?', 0, 10, 0)
+    FDirektanvisar = st.slider('Direktanvisar kommunen mark?', 0, 10, 0)
+    Fbefolkning = st.slider('Hur är befolkningsutvecklingen i kommunen?', 0, 10, 0)
+    Fmarkvärde = st.slider('Vad är snittpriset per kvadratmeter mark?', 0, 10, 0)
+    Fgrön = st.slider('Hur stor är krontäckningen i urbana områden i kommunen?', 0, 10, 0)
+    Fbestånd = st.slider('Har SKB ett stort bestånd i kommunen?', 0, 10, 0)
+    Fmedlemstäthet = st.slider('Hur många SKB-medlemmar bor i kommunen?', 0, 10, 0)
     
 
 
