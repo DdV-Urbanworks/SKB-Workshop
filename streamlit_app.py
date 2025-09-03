@@ -29,7 +29,7 @@ with st.sidebar:
 
     st.title('Hur viktiga är dessa frågor för SKBs nya markstrategi?')
     
-    Fnärhet = st.slider('Hur stor andel av kommunen ligger inom 1 timme från Stockholm eller Uppsala?', 0, 10, 5)
+    Fnärhet = st.slider('Hur stor andel av kommunen ligger inom 1 timme från Stockholm', 0, 10, 5)
     FTomträtt = st.slider('Tillämpar kommunen tomträtt?', 0, 10, 5)
     FDirektanvisar = st.slider('Direktanvisar kommunen mark?', 0, 10, 5)
     Fbefolkning = st.slider('Hur är befolkningsutvecklingen i kommunen?', 0, 10, 5)
